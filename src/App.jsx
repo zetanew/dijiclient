@@ -1,5 +1,5 @@
 import { useState , useEffect } from 'react'
-import { fetchAllStates , fetchAllJobs } from '../api/http'
+import { fetchAllStates , fetchAllJobs , fetchJobsByStateId } from '../api/http'
 import './App.css'
 import Test from '../components/Test';
 import Paper from '@mui/material/Paper';
@@ -10,7 +10,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-
+import Map from './components/Map';
 // columns !! 
 
 const columns = [
@@ -38,7 +38,7 @@ function App() {
   const [states, setStates] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
+  const [selectedCity, setSelectedCity] = useState(null);
 
 
   useEffect(() => {
@@ -46,6 +46,8 @@ function App() {
       const states = await fetchAllStates();
       setStates(states);
     }
+
+
 
     async function fetchData() {
       const states = await fetchAllJobs();
@@ -56,7 +58,17 @@ function App() {
     console.log(states)
   }, []);
 
+  useEffect(() => {
+    console.log(selectedCity);
+    async function fetchData() {
+      const states = await fetchJobsByStateId(selectedCity);
+      setRows(states);
+      console.log(states)
+    }
+    fetchData(); //  fetch ediyo
+  }, [selectedCity]);
 
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -71,6 +83,7 @@ function App() {
 
 
     <>
+    <Map setSelectedCity={setSelectedCity} />
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">

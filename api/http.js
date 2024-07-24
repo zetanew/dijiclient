@@ -25,7 +25,11 @@ export async function fetchAllJobs() {
 // Fetcher for Jobs by State ID
 export async function fetchJobsByStateId(stateId) {
   try {
-    const response = await client.get(`${endPoints.locations}?stateId=${stateId}`);
+    // Extract only digits from stateId
+    const numericStateId = stateId.replace(/\D/g, '');
+    console.log("triggered");
+    console.log(numericStateId); // Log the numeric part of stateId
+    const response = await client.get(`${endPoints.locations}?stateId=${numericStateId}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching jobs for state ID ${stateId}: `, error);
